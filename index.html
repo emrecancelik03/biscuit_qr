@@ -58,6 +58,27 @@
       padding: 12px 4px;
       font-size: 16px;
     }
+    .item-text { flex: 1; min-width: 0; }
+    .item-note {
+      display: block;
+      margin-top: 4px;
+      font-size: 12px;
+      line-height: 1.35;
+      opacity: 0.55;
+    }
+    .campaigns { margin-top: 8px; }
+    .campaign-title {
+      font-size: 19px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #444;
+    }
+    .campaign .thumb {
+      width: 72px;
+      height: 72px;
+    }
     .thumb {
       width: 56px;
       height: 56px;
@@ -116,17 +137,33 @@
     function render(data) {
       const cafe = data.cafe || {};
       const categories = data.categories || [];
-      const cats = categories.map((cat) => {
-        const items = (cat.items || []).map((item) => {
-          const img = item.image
-            ? `<img class="thumb" src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}">`
-            : `<div class="thumb placeholder">•</div>`;
-          return `<div class="item">
-            ${img}
+      function row(item, extraClass) {
+        const img = item.image
+          ? `<img class="thumb" src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}">`
+          : `<div class="thumb placeholder">•</div>`;
+        const note = item.note
+          ? `<span class="item-note">(${escapeHtml(item.note)})</span>`
+          : "";
+        return `<div class="item ${extraClass || ""}">
+          ${img}
+          <div class="item-text">
             <span class="item-name">${escapeHtml(item.name)}</span>
-            <span class="price">${escapeHtml(item.price)} TL</span>
-          </div>`;
-        }).join("");
+            ${note}
+          </div>
+          <span class="price">${escapeHtml(item.price)} TL</span>
+        </div>`;
+      }
+
+      const campaigns = (data.campaigns || []);
+      const campaignBlock = campaigns.length
+        ? `<div class="campaigns">
+            <div class="campaign-title">🎯 KAMPANYALAR</div>
+            ${campaigns.map((item) => row(item, "campaign")).join("")}
+          </div>`
+        : "";
+
+      const cats = categories.map((cat) => {
+        const items = (cat.items || []).map((item) => row(item)).join("");
         return `<div class="category">
           <div class="category-title">${escapeHtml(cat.title)}</div>
           ${items}
@@ -139,6 +176,7 @@
           <div class="subtitle">${escapeHtml(cafe.subtitle || "GAME CENTER")}</div>
           <div class="line"></div>
         </div>
+        ${campaignBlock}
         ${cats}
         <div class="footer">
           ${escapeHtml(cafe.footerLine1 || "")}<br>
