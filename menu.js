@@ -1,8 +1,9 @@
 // Menü buradan düzenlenir.
 // Fiyat: "price" sayısını değiştir.
 // İsim: "name" yazısını değiştir.
+// Açıklama: "note" ekle, parantez içinde görünür. İstemiyorsan satırdan "note" kısmını sil.
 // Görsel: images klasörüne aynı isimle fotoğraf koy, "image" yolunu ona göre yaz.
-// Yeni ürün: bir satırı kopyala, "id" yi benzersiz yap (ör. cay2).
+// Yeni ürün / kampanya: bir satırı kopyala, "id" yi benzersiz yap (ör. cay2).
 window.BISCUIT_MENU = {
   "cafe": {
     "name": "BISCUIT",
@@ -10,13 +11,17 @@ window.BISCUIT_MENU = {
     "footerLine1": "BISCUIT GAME CENTER",
     "footerLine2": "İyi oyunlar, iyi eğlenceler 🎱"
   },
+  "campaigns": [
+    { "id": "tatli-cay", "name": "Tatlı + Çay", "price": 150, "image": "images/kampanya-tatli-cay.jpg" },
+    { "id": "tatli-kahve", "name": "Tatlı + Kahve", "price": 200, "image": "images/kampanya-tatli-kahve.jpg" }
+  ],
   "categories": [
     {
       "id": "sicak",
       "title": "☕ SICAK İÇECEKLER",
       "items": [
         { "id": "cay", "name": "Çay", "price": 40, "image": "images/cay.jpg" },
-        { "id": "oralet", "name": "Oralet", "price": 50, "image": "images/oralet.jpg" },
+        { "id": "oralet", "name": "Oralet", "price": 50, "image": "images/oralet.jpg", "note": "Kivi, Muz, Kakao, Karadut, Portakal, Prenses, Elma, Şirin, Kuşburnu, Nane Limon, Limon, Atom, Kokteyl" },
         { "id": "turk-kahvesi", "name": "Türk Kahvesi", "price": 100, "image": "images/turk-kahvesi.jpg" },
         { "id": "espresso", "name": "Espresso", "price": 100, "image": "images/espresso.jpg" },
         { "id": "americano", "name": "Americano", "price": 100, "image": "images/americano.jpg" },
@@ -31,6 +36,7 @@ window.BISCUIT_MENU = {
       "title": "🥤 SOĞUK İÇECEKLER",
       "items": [
         { "id": "su", "name": "Su", "price": 35, "image": "images/su.jpg" },
+        { "id": "ice-tea", "name": "Ice Tea", "price": 90, "image": "images/ice-tea.jpg", "note": "Karpuz, Şeftali, Limon" },
         { "id": "coca-cola", "name": "Coca-Cola", "price": 90, "image": "images/coca-cola.jpg" },
         { "id": "fanta", "name": "Fanta", "price": 90, "image": "images/fanta.jpg" },
         { "id": "sprite", "name": "Sprite", "price": 90, "image": "images/sprite.jpg" },
