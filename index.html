@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#111111">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>BISCUIT Game Center | Menü</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #111;
+      color: #fff;
+      min-height: 100dvh;
+    }
+    .menu {
+      max-width: 600px;
+      margin: auto;
+      padding: 28px 18px calc(40px + env(safe-area-inset-bottom));
+    }
+    .header {
+      text-align: center;
+      padding: 20px 10px 30px;
+    }
+    .logo {
+      font-size: 38px;
+      font-weight: 900;
+      letter-spacing: 4px;
+    }
+    .subtitle {
+      font-size: 14px;
+      letter-spacing: 5px;
+      margin-top: 8px;
+      opacity: 0.7;
+    }
+    .line {
+      width: 60px;
+      height: 3px;
+      margin: 18px auto 0;
+      background: #fff;
+    }
+    .category { margin-top: 25px; }
+    .category-title {
+      font-size: 19px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #444;
+    }
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 4px;
+      font-size: 16px;
+    }
+    .thumb {
+      width: 56px;
+      height: 56px;
+      border-radius: 10px;
+      object-fit: cover;
+      background: #1c1c1c;
+      flex-shrink: 0;
+    }
+    .thumb.placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #555;
+      font-size: 22px;
+    }
+    .item-name {
+      flex: 1;
+      min-width: 0;
+      line-height: 1.3;
+    }
+    .price {
+      font-weight: bold;
+      white-space: nowrap;
+      margin-left: 8px;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 35px;
+      padding-top: 20px;
+      border-top: 1px solid #333;
+      font-size: 13px;
+      opacity: 0.55;
+    }
+    .status {
+      text-align: center;
+      padding: 40px 16px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <div class="menu" id="app">
+    <div class="status">Menü yükleniyor…</div>
+  </div>
+  <script>
+    const app = document.getElementById("app");
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function render(data) {
+      const cafe = data.cafe || {};
+      const categories = data.categories || [];
+      const cats = categories.map((cat) => {
+        const items = (cat.items || []).map((item) => {
+          const img = item.image
+            ? `<img class="thumb" src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}">`
+            : `<div class="thumb placeholder">•</div>`;
+          return `<div class="item">
+            ${img}
+            <span class="item-name">${escapeHtml(item.name)}</span>
+            <span class="price">${escapeHtml(item.price)} TL</span>
+          </div>`;
+        }).join("");
+        return `<div class="category">
+          <div class="category-title">${escapeHtml(cat.title)}</div>
+          ${items}
+        </div>`;
+      }).join("");
+
+      app.innerHTML = `
+        <div class="header">
+          <div class="logo">${escapeHtml(cafe.name || "BISCUIT")}</div>
+          <div class="subtitle">${escapeHtml(cafe.subtitle || "GAME CENTER")}</div>
+          <div class="line"></div>
+        </div>
+        ${cats}
+        <div class="footer">
+          ${escapeHtml(cafe.footerLine1 || "")}<br>
+          ${escapeHtml(cafe.footerLine2 || "")}
+        </div>`;
+    }
+
+    function loadMenu() {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "menu.js?v=" + Date.now();
+        script.onload = () => {
+          if (window.BISCUIT_MENU) resolve(window.BISCUIT_MENU);
+          else reject(new Error("Menü boş"));
+        };
+        script.onerror = () => reject(new Error("Menü okunamadı"));
+        document.head.appendChild(script);
+      });
+    }
+
+    loadMenu()
+      .then(render)
+      .catch(() => {
+        app.innerHTML = `<div class="status">Menü şu anda yüklenemedi. Sayfayı yenileyin.</div>`;
+      });
+  </script>
+</body>
+</html>
